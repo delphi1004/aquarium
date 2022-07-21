@@ -6,6 +6,7 @@ public class Fish : MonoBehaviour
 {
     private bool turning;
     private float orgSpeed;
+    private float rotaionSpeed;
     
     public float speed;
     public FishController controller;
@@ -13,8 +14,9 @@ public class Fish : MonoBehaviour
     void Start()
     {
         turning = false;
-        speed = Random.Range(controller.minSpeed,controller.maxSpeed);
+        speed = Random.Range(0.5f,1.5f);
         orgSpeed = speed;
+        rotaionSpeed = controller.rotationSpeed;
     }
 
     void ApplyRules()
@@ -23,17 +25,18 @@ public class Fish : MonoBehaviour
         Vector3 avgCenter = Vector3.zero;
         Vector3 avgAvoidance = Vector3.zero;
         float groupSpeed = 0.01f;
-        float avoidDistance;
+        float neighbourDistance;
         int totalGroup = 0;
 
         foreach (GameObject fish in fishes) {
             if(fish != gameObject){
-                avoidDistance = Vector3.Distance(fish.transform.position, transform.position);
-                if(avoidDistance <= controller.avoidDistance){
+                neighbourDistance = Vector3.Distance(fish.transform.position, transform.position);
+                if(neighbourDistance <= controller.neighbourDistance){
                     avgCenter += fish.transform.position;
                     totalGroup++;
 
-                    if(avoidDistance < 1.0f){
+                    if(neighbourDistance < controller.avoidDistance){
+                        //Debug.Log(neighbourDistance);
                         avgAvoidance += (transform.position - fish.transform.position);
                     }
 
@@ -68,11 +71,12 @@ public class Fish : MonoBehaviour
 
         if(!bounds.Contains(transform.position)) {
             direction = controller.targetPos - transform.position;
+            speed = orgSpeed + Random.Range(-0.3f,0.3f);
             turning = true;
-        } else if(Physics.Raycast(transform.position , forward,out hit)) {
-            Debug.DrawRay(transform.position, forward, Color.red);
-            direction = Vector3.Reflect(transform.forward,hit.normal);
-            turning = true;
+        // } else if(Physics.Raycast(transform.position , forward,out hit)) {
+        //     Debug.DrawRay(transform.position, forward, Color.red);
+        //     direction = Vector3.Reflect(transform.forward,hit.normal);
+        //     turning = true;
         } else{
             turning = false;
         }
@@ -83,13 +87,16 @@ public class Fish : MonoBehaviour
                 controller.boundaryRotationSpeed * Time.deltaTime); 
         }else{
             if(Random.Range(0,100) < 1){
-                speed = Mathf.Lerp(orgSpeed, Random.Range(orgSpeed , orgSpeed*3.0f), Time.deltaTime * 5.0f);
+                // speed = Mathf.Lerp(orgSpeed, Random.Range(controller.minSpeed , controller.maxSpeed), Time.deltaTime * 50.0f);
+                // Debug.Log(speed);
             }
 
-            if(Random.Range(0,100) < 20){
-                ApplyRules();
-            }
+            // if(Random.Range(0,100) < 20){
+            //     ApplyRules();
+            // }
         }
+
+        ApplyRules();
 
         transform.Translate(0,0,Time.deltaTime * speed);
     }

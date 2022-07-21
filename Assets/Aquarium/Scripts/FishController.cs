@@ -8,7 +8,7 @@ public class FishController : MonoBehaviour
 
     public GameObject greenFish;
     public GameObject pinkFish;
-    public int maxFish = 20;
+    public int maxFish = 2;
     public GameObject[] allFish;
     public Vector3 boundary;
     public Vector3 targetPos;
@@ -19,6 +19,8 @@ public class FishController : MonoBehaviour
     [Range(0.1f,5.0f)]
     public float maxSpeed;
     [Range(1.0f,10.0f)]
+    public float neighbourDistance;
+    [Range(1.0f,10.0f)]
     public float avoidDistance;
     [Range(0.1f,5.0f)]
     public float rotationSpeed;
@@ -28,18 +30,15 @@ public class FishController : MonoBehaviour
 
     void Awake() 
     {
-        minSpeed = 0.5f;
-        maxSpeed = 1.0f;
-        avoidDistance = 0.5f;
-        rotationSpeed = 1f;
-        boundaryRotationSpeed = 2.5f;
+        minSpeed = 0.3f;
+        maxSpeed = 1.5f;
+        neighbourDistance = 5f;
+        avoidDistance = 3.0f;
+        rotationSpeed = 0.3f;
+        boundaryRotationSpeed = 0.2f;
         boxCollider = GetComponent<BoxCollider>();
         boundary = new Vector3(boxCollider.size.x/2,boxCollider.size.y/2,boxCollider.size.z/2);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         Vector3 fishPosition;
         allFish = new GameObject[maxFish];
 
@@ -59,13 +58,19 @@ public class FishController : MonoBehaviour
         targetPos = transform.position;
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+       
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(Random.Range(0,100) < 0.000002){
-            targetPos = transform.position + new Vector3(Random.Range(-boundary.x,boundary.x),
-                Random.Range(-boundary.y,boundary.y),
-                Random.Range(-boundary.z,boundary.z));
-        }
+        // if(Random.Range(0,100) < 0.000002){
+        //     targetPos = transform.position + new Vector3(Random.Range(-boundary.x,boundary.x),
+        //         Random.Range(-boundary.y,boundary.y),
+        //         Random.Range(-boundary.z,boundary.z));
+        // }
     }
 }
