@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Aquarium/Scenes/aquarium.unity
+    guid: eb5c26842d52d4b69a13819e92aa0fb6
   m_configObjects: {}
